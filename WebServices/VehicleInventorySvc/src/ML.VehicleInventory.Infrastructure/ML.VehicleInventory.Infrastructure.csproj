@@ -20,8 +20,4 @@
     <ProjectReference Include="..\VehicleInventory.Domain\VehicleInventory.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Repositories\" />
-  </ItemGroup>
-
 </Project>
