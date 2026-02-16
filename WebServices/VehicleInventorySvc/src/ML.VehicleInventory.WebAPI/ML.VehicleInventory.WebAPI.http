@@ -1,0 +1,6 @@
+@ML.VehicleInventory.WebAPI_HostAddress = http://localhost:5196
+
+GET {{ML.VehicleInventory.WebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
