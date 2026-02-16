@@ -42,15 +42,48 @@ namespace ML.VehicleInventory.Application.Services
         // UpdateVehicleStatus
         public async Task<bool> UpdateVehicleStatusAsync(int id, VehicleStatus newStatus)
         {
-            // will implement next commit
-            return await Task.FromResult(false);
+            var vehicle = await _repo.GetByIdAsync(id);
+            if (vehicle == null) return false;
+
+            // calling domain behavior methods (did not set Status directly)
+            switch (newStatus)
+            {
+                case VehicleStatus.Available:
+                    // reserved: available requires explicit release
+                    if (vehicle.Status == VehicleStatus.Reserved)
+                        vehicle.ReleaseReservation();
+                    else
+                        vehicle.MarkAvailable();
+                    break;
+
+                case VehicleStatus.Reserved:
+                    vehicle.MarkReserved();
+                    break;
+
+                case VehicleStatus.Rented:
+                    vehicle.MarkRented();
+                    break;
+
+                case VehicleStatus.Serviced:
+                    vehicle.MarkServiced();
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(newStatus), "Unknown vehicle status.");
+            }
+
+            await _repo.UpdateAsync(vehicle);
+            return true;
         }
 
         // DeleteVehicle
         public async Task<bool> DeleteVehicleAsync(int id)
         {
-            // will implement next commit
-            return await Task.FromResult(false);
+            var vehicle = await _repo.GetByIdAsync(id);
+            if (vehicle == null) return false;
+
+            await _repo.DeleteAsync(vehicle);
+            return true;
         }
 
         private static MLVehicleDto ToDto(Vehicle v)
