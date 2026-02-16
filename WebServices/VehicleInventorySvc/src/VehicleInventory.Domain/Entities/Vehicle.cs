@@ -39,16 +39,31 @@ namespace VehicleInventory.Domain.Entities
 
         public void MarkRented()
         {
+            if (Status == VehicleStatus.Rented)
+                throw new DomainException("Vehicle is already rented.");
+
+            if (Status == VehicleStatus.Reserved)
+                throw new DomainException("Vehicle cannot be rented while reserved.");
+
+            if (Status == VehicleStatus.Serviced)
+                throw new DomainException("Vehicle cannot be rented while under service.");
+
             Status = VehicleStatus.Rented;
         }
 
         public void MarkReserved()
         {
+            if (Status != VehicleStatus.Available)
+                throw new DomainException("Only available vehicles can be reserved.");
+
             Status = VehicleStatus.Reserved;
         }
 
         public void MarkServiced()
         {
+            if (Status != VehicleStatus.Available)
+                throw new DomainException("Only available vehicles can be marked as under service.");
+
             Status = VehicleStatus.Serviced;
         }
     }
