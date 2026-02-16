@@ -3,6 +3,7 @@ using ML.VehicleInventory.Application.Services;
 using ML.VehicleInventory.Application.Interfaces;
 using ML.VehicleInventory.Infrastructure.Data;
 using ML.VehicleInventory.Infrastructure.Repositories;
+using ML.VehicleInventory.WebAPI.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<MLExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 
