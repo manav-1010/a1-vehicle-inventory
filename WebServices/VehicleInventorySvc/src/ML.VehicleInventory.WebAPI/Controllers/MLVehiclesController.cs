@@ -22,5 +22,18 @@ namespace ML.VehicleInventory.WebAPI.Controllers
             return Ok(vehicles);
         }
 
+        // GET: /api/vehicles/
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var vehicle = await _vehicleService.GetVehicleByIdAsync(id);
+
+            if (vehicle == null)
+                return NotFound();
+
+            return Ok(vehicle);
+        }
+
+
     }
 }
