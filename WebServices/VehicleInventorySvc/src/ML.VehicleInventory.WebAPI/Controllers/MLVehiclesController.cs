@@ -13,5 +13,14 @@ namespace ML.VehicleInventory.WebAPI.Controllers
         {
             _vehicleService = vehicleService;
         }
+
+        // GET: /api/vehicles
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var vehicles = await _vehicleService.GetAllVehiclesAsync();
+            return Ok(vehicles);
+        }
+
     }
 }
