@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ML.VehicleInventory.Application.DTOs;
 using ML.VehicleInventory.Application.Services;
 
 namespace ML.VehicleInventory.WebAPI.Controllers
@@ -22,7 +23,7 @@ namespace ML.VehicleInventory.WebAPI.Controllers
             return Ok(vehicles);
         }
 
-        // GET: /api/vehicles/
+        // GET: /api/vehicles/{id}
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -34,6 +35,41 @@ namespace ML.VehicleInventory.WebAPI.Controllers
             return Ok(vehicle);
         }
 
+        // POST: /api/vehicles
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] MLCreateVehicleDto dto)
+        {
+            var created = await _vehicleService.CreateVehicleAsync(dto);
 
+            return CreatedAtAction(
+                nameof(GetById),
+                new { id = created.Id },
+                created
+            );
+        }
+
+        // PUT: /api/vehicles/{id}/status
+        [HttpPut("{id:int}/status")]
+        public async Task<IActionResult> UpdateStatus(int id, [FromBody] MLUpdateVehicleStatusDto dto)
+        {
+            var updated = await _vehicleService.UpdateVehicleStatusAsync(id, dto.Status);
+
+            if (!updated)
+                return NotFound();
+
+            return NoContent();
+        }
+
+        // DELETE: /api/vehicles/{id}
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var deleted = await _vehicleService.DeleteVehicleAsync(id);
+
+            if (!deleted)
+                return NotFound();
+
+            return NoContent();
+        }
     }
 }
