@@ -31,9 +31,11 @@ namespace VehicleInventory.Domain.Entities
             Status = VehicleStatus.Available;
         }
 
-        // Will add rules later
         public void MarkAvailable()
         {
+            if (Status == VehicleStatus.Reserved)
+                throw new DomainException("Reserved vehicle cannot be made available without releasing the reservation.");
+
             Status = VehicleStatus.Available;
         }
 
@@ -65,6 +67,14 @@ namespace VehicleInventory.Domain.Entities
                 throw new DomainException("Only available vehicles can be marked as under service.");
 
             Status = VehicleStatus.Serviced;
+        }
+
+        public void ReleaseReservation()
+        {
+            if (Status != VehicleStatus.Reserved)
+                throw new DomainException("Vehicle is not reserved.");
+
+            Status = VehicleStatus.Available;
         }
     }
 }
