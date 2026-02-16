@@ -20,8 +20,4 @@
     <ProjectReference Include="..\ML.VehicleInventory.Infrastructure\ML.VehicleInventory.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
 </Project>
