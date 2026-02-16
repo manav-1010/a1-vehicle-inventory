@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ML.VehicleInventory.Application.DTOs;
 using ML.VehicleInventory.Application.Services;
+using ML.VehicleInventory.WebAPI.Models;
 
 namespace ML.VehicleInventory.WebAPI.Controllers
 {
@@ -37,21 +38,32 @@ namespace ML.VehicleInventory.WebAPI.Controllers
 
         // POST: /api/vehicles
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] MLCreateVehicleDto dto)
+        public async Task<IActionResult> Create([FromBody] MLCreateVehicleRequest request)
         {
+            if (!ModelState.IsValid)
+                return ValidationProblem(ModelState);
+
+            var dto = new MLCreateVehicleDto
+            {
+                VehicleCode = request.VehicleCode,
+                LocationId = request.LocationId,
+                VehicleType = request.VehicleType
+            };
+
             var created = await _vehicleService.CreateVehicleAsync(dto);
 
-            return CreatedAtAction(
-                nameof(GetById),
-                new { id = created.Id },
-                created
-            );
+            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
         // PUT: /api/vehicles/{id}/status
         [HttpPut("{id:int}/status")]
-        public async Task<IActionResult> UpdateStatus(int id, [FromBody] MLUpdateVehicleStatusDto dto)
+        public async Task<IActionResult> UpdateStatus(int id, [FromBody] MLUpdateVehicleStatusRequest request)
         {
+            if (!ModelState.IsValid)
+                return ValidationProblem(ModelState);
+
+            var dto = new MLUpdateVehicleStatusDto { Status = request.Status };
+
             var updated = await _vehicleService.UpdateVehicleStatusAsync(id, dto.Status);
 
             if (!updated)
@@ -59,6 +71,7 @@ namespace ML.VehicleInventory.WebAPI.Controllers
 
             return NoContent();
         }
+
 
         // DELETE: /api/vehicles/{id}
         [HttpDelete("{id:int}")]
